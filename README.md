@@ -50,7 +50,7 @@ Cada serviço possui sua própria configuração, modelo de dados e rotas.
     - O product-service estará rodando em http://localhost:8000.
     - O stock-service e report-service estarão rodando em suas respectivas portas configuradas no docker-compose.yml.
 
-## Tecnologias Utilizadas
+## Executando Testes
 Para executar os testes, execute o seguinte comando:
 
     pytest
@@ -72,3 +72,82 @@ Para executar os testes, execute o seguinte comando:
 
 - **DELETE** /products/{product_id}
     - Deleta um produto pelo ID.
+
+
+
+##### English Version
+
+# Inventory Management System
+
+## Description
+This project is an inventory management system that allows for the administration of products, stock control, and report generation. It is built using a microservices architecture with Python and FastAPI.
+
+## Project Structure
+The project is divided into three main microservices:
+
+- **product-service**: Manages the products in the inventory.
+- **stock-service:**: Controls the quantity of products in stock.
+- **report-service:**: Generates reports on the inventory.
+
+Each service has its own configuration, data model, and routes.
+
+## Technologies Used
+- Python
+- FastAPI
+- SQLAlchemy
+- PostgreSQL
+- Docker
+- Docker Compose
+- Pandas
+- Pytest
+
+## Setup and Execution
+
+### Setup Steps
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/ericDK89/inventory-management.git
+   cd inventory-management
+   ```
+
+2. **Create the .env file in each service directory (product-service, stock-service, report-service):**
+   ```bash
+    POSTGRES_USER=your_username
+    POSTGRES_PASSWORD=your_password
+    POSTGRES_DB=your_database
+    POSTGRES_HOST=db
+    POSTGRES_PORT=5432
+     ```
+      
+3. **Build and start the services using Docker Compose:**
+    ```bash
+    docker-compose up --build
+     ```
+
+4. **Access the application:**
+    - O product-service estará rodando em http://localhost:8000.
+    - O stock-service e report-service estarão rodando em suas respectivas portas configuradas no docker-compose.yml.
+
+## Running Tests
+To run the tests, execute the following command:
+
+    pytest
+
+## Endpoints
+
+### Product Service
+- **POST** /products
+    - Create a new product.
+    
+- **GET** /products
+    -Retrieve a list of products.
+
+- **GET** /products/{product_id}
+    - Retrieve a specific product by ID.
+
+- **PUT** /products/{product_id}
+    - Update a product by ID.
+
+- **DELETE** /products/{product_id}
+    - Delete a product by ID.
