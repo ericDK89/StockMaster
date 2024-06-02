@@ -73,9 +73,7 @@ Para executar os testes, execute o seguinte comando:
 - **DELETE** /products/{product_id}
     - Deleta um produto pelo ID.
 
-
-
-##### English Version
+---
 
 # Inventory Management System
 
