@@ -23,3 +23,17 @@ class ProductRepository:
         self.__db.commit()
         self.__db.refresh(product)
         return product
+
+    # * if manually add return Product | None, SQLAlchemy throws error
+    def findByName(self, name: str):
+        """Method to find product by name
+
+        Args:
+            name (str): Name of the product
+
+        Returns:
+            Product: If find the product
+            None: If don't find the product
+        """
+
+        return self.__db.query(Product).filter(Product.name == name).first()

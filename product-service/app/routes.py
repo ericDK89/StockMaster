@@ -31,8 +31,6 @@ def create_product(
     except ProductException as e:
         return JSONResponse(status_code=400, content={"error": str(e.message)})
 
-    # TODO -> create a exception for when the same product_name is used, cant allow it
-
     except HTTPException as e:
         return JSONResponse(status_code=400, content={"error": str(e.detail)})
 

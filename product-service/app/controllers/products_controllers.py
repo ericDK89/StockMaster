@@ -3,6 +3,7 @@
 from ..schemas.product_schema import ProductCreate
 from ..exceptions.product_execptions import ProductException
 from ..services.product_service import ProductService
+from ..models.product import Product
 
 
 class ProductController:
@@ -20,8 +21,11 @@ class ProductController:
         Raises:
             ProductException: If there is an error on product raises the exception
         """
-        # TODO -> create handler for when the product_name already exists
+        response: Product | None = self.__product_service.create(product)
 
-        self.__product_service.create(product)
+        if response:
+            raise ProductException(
+                name="AlreadyExists", message="Product already exists"
+            )
 
         return "Product successfully created"
