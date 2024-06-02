@@ -139,7 +139,7 @@ To run the tests, execute the following command:
     - Create a new product.
     
 - **GET** /products
-    -Retrieve a list of products.
+    - Retrieve a list of products.
 
 - **GET** /products/{product_id}
     - Retrieve a specific product by ID.

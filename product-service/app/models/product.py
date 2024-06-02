@@ -2,12 +2,10 @@
 
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
-from dataclasses import dataclass
 
 Base = declarative_base()
 
 
-@dataclass
 class Product(Base):
     """Class to generate product table"""
 

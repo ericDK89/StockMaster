@@ -1,35 +1,41 @@
 """File to handle all product-service routes"""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
-from .schemas.product_schema import ProductCreate, ProductOut
-from typing import List
-from .controllers import create_products_controllers
+from .schemas.product_schema import ProductCreate
 from .exceptions.product_execptions import ProductException
+from .dependencies.product_dependencies import get_product_controller
+from .controllers.products_controllers import ProductController
 
 router = APIRouter()
 
 
 @router.post("/products")
-def create_product(product: ProductCreate):
+def create_product(
+    product: ProductCreate,
+    product_controller: ProductController = Depends(get_product_controller),
+) -> JSONResponse:
     """Def to create product
 
     Args:
         product (ProductCreate): Body from request
+        product_controller: ProductController
 
     Returns:
         JSONResponse: Json response with message of success or error
     """
     try:
-        create_products_controllers.execute(product)
+        response: str = product_controller.create(product)
+        return JSONResponse(status_code=201, content={"success": response})
 
-        return JSONResponse(
-            status_code=201, content={"success": "Product successfully created"}
-        )
     except ProductException as e:
         return JSONResponse(status_code=400, content={"error": str(e.message)})
+
+    # TODO -> create a exception for when the same product_name is used, cant allow it
+
     except HTTPException as e:
         return JSONResponse(status_code=400, content={"error": str(e.detail)})
+
     except Exception as e:
         return JSONResponse(
             status_code=500,
