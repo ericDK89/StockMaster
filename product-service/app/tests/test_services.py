@@ -43,8 +43,14 @@ def test_create_product_when_product_already_exists(
     # * Mock the repository to return the existing_product when findByName is called
     product_repository_mock.findByName.return_value = existing_product
 
+    # * Mock the repository to create something, just start it
+    product_repository_mock.create.return_value = any
+
     # * Attempt to create a product with the same data
-    result = product_service.create(product_data)
+    result: Product = product_service.create(product_data)
+
+    # * Assert that the method findByName was called
+    product_repository_mock.findByName.assert_called_once()
 
     # * Assert that the result is the same as the existing product
     assert result == existing_product
@@ -56,7 +62,12 @@ def test_create_product_when_product_already_exists(
 def test_create_product_when_product_dont_exists(
     product_service: ProductService, product_repository_mock: MagicMock
 ) -> None:
-    # TODO -> Add DocString
+    """Def to test if it's possible to create a product if there is other with the same name on db
+
+    Args:
+        product_service (ProductService): ProductService
+        product_repository_mock (MagicMock): MockRepository
+    """
 
     # * Define the product data of type ProductCreate
     product_data = ProductCreate(
@@ -66,14 +77,11 @@ def test_create_product_when_product_dont_exists(
         stock_quantity=10,
     )
 
-    # * Convert the ProductCreate instance to a Product instance
-    new_product = Product(**product_data.model_dump())
-
     # * Mock the repository to return None when findByName is called, indicating that the product does not exist
     product_repository_mock.findByName.return_value = None
 
-    # * Mock the repository to return the new product when create is called
-    product_repository_mock.create.return_value = new_product
+    # * Mock the repository to call the create method
+    product_repository_mock.create.return_value = Product(**product_data.model_dump())
 
     # * Call the create method of the service
     result: Product = product_service.create(product_data)
@@ -85,4 +93,7 @@ def test_create_product_when_product_dont_exists(
     product_repository_mock.create.assert_called_once()
 
     # * Assert that the result is the new product
-    assert result == new_product
+    assert result.name == product_data.name
+    assert result.description == product_data.description
+    assert result.price == product_data.price
+    assert result.stock_quantity == product_data.stock_quantity
