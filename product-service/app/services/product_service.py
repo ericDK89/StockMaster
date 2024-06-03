@@ -8,7 +8,7 @@ from ..models.product import Product
 class ProductService:
     """Class ProductService to send repository correct data"""
 
-    def __init__(self, product_repository: ProductRepository) -> None:
+    def __init__(self, product_repository: ProductRepository) -> Product:
         self.__product_repository: ProductRepository = product_repository
 
     # * if manually add return Product | None, SQLAlchemy throws error
@@ -17,15 +17,20 @@ class ProductService:
 
         Args:
             product (ProductCreate): The product validated by controller
+
+        Returns:
+            product (Product): Return the existing_product ou the created_product
         """
 
-        product = self.__product_repository.findByName(product.name)
+        existing_product: Product | None = self.__product_repository.findByName(
+            product.name
+        )
 
-        if product:
-            return product
+        if existing_product:
+            return existing_product
 
         product_instance = Product(**product.model_dump())
-        response: Product = self.__product_repository.create(product_instance)
+        created_product: Product = self.__product_repository.create(product_instance)
 
-        print(response)
-        return None
+        print(created_product)
+        return created_product

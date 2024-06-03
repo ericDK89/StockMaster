@@ -16,10 +16,10 @@ class ProductController:
         """Def to create product
 
         Args:
-            product (ProductCreate): Body from response that comes in ProductCreat format
+            product (ProductCreate): Body from response that comes in ProductCreate format
 
         Raises:
-            ProductException: If there is an error on product raises the exception
+            ProductException: If there is an error on while tying to creare product raises
         """
         response: Product | None = self.__product_service.create(product)
 
