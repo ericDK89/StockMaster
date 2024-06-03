@@ -136,16 +136,30 @@ To run the tests, execute the following command:
 
 ### Product Service
 - **POST** /products
-    - Create a new product.
-    
+    - Criar um novo produto.
+
 - **GET** /products
-    - Retrieve a list of products.
+    - Listar produtos.
 
 - **GET** /products/{product_id}
-    - Retrieve a specific product by ID.
+    - Obter detalhes de um produto específico pelo ID.
 
 - **PUT** /products/{product_id}
-    - Update a product by ID.
+    - Atualizar um produto pelo ID.
 
 - **DELETE** /products/{product_id}
-    - Delete a product by ID.
+    - Deletar um produto pelo ID.
+
+### Stock Service
+- **PUT** /stock/{product_id}
+    - Atualizar o estoque de um produto específico pelo ID.
+
+- **GET** /stock/{product_id}
+    - Consultar o estoque de um produto específico pelo ID.
+
+### Report Service
+- **POST** /reports/sales
+    - Gerar um relatório de vendas.
+
+- **POST** /reports/inventory
+    - Gerar um relatório de estoque.

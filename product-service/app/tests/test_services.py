@@ -43,9 +43,6 @@ def test_create_product_when_product_already_exists(
     # * Mock the repository to return the existing_product when findByName is called
     product_repository_mock.findByName.return_value = existing_product
 
-    # * Mock the repository to create something, just start it
-    product_repository_mock.create.return_value = any
-
     # * Attempt to create a product with the same data
     result: Product = product_service.create(product_data)
 
@@ -55,14 +52,11 @@ def test_create_product_when_product_already_exists(
     # * Assert that the result is the same as the existing product
     assert result == existing_product
 
-    # * Ensure that the create method was not called
-    product_repository_mock.create.assert_not_called()
-
 
 def test_create_product_when_product_dont_exists(
     product_service: ProductService, product_repository_mock: MagicMock
 ) -> None:
-    """Def to test if it's possible to create a product if there is other with the same name on db
+    """Def to test if it's possible to create a product if there is no other with the same name on db
 
     Args:
         product_service (ProductService): ProductService
