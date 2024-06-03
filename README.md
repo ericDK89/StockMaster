@@ -73,6 +73,20 @@ Para executar os testes, execute o seguinte comando:
 - **DELETE** /products/{product_id}
     - Deleta um produto pelo ID.
 
+### Stock Service
+- **PUT** /stock/{product_id}
+    - Atualizar o estoque de um produto específico pelo ID.
+
+- **GET** /stock/{product_id}
+    - Consultar o estoque de um produto específico pelo ID.
+
+### Report Service
+- **POST** /reports/sales
+    - Gerar um relatório de vendas.
+
+- **POST** /reports/inventory
+    - Gerar um relatório de estoque.
+
 ---
 
 # Inventory Management System
@@ -136,30 +150,30 @@ To run the tests, execute the following command:
 
 ### Product Service
 - **POST** /products
-    - Criar um novo produto.
+    - Create a new product.
 
 - **GET** /products
-    - Listar produtos.
+    - Retrieve a list of products.
 
 - **GET** /products/{product_id}
-    - Obter detalhes de um produto específico pelo ID.
+    - Retrieve a specific product by ID.
 
 - **PUT** /products/{product_id}
-    - Atualizar um produto pelo ID.
+    - Update a product by ID.
 
 - **DELETE** /products/{product_id}
-    - Deletar um produto pelo ID.
+    - Delete a product by ID.
 
 ### Stock Service
 - **PUT** /stock/{product_id}
-    - Atualizar o estoque de um produto específico pelo ID.
+    - Update the stock of a specific product by ID.
 
 - **GET** /stock/{product_id}
-    - Consultar o estoque de um produto específico pelo ID.
+    - Retrieve the stock of a specific product by ID.
 
 ### Report Service
 - **POST** /reports/sales
-    - Gerar um relatório de vendas.
+    - Generate a sales report.
 
 - **POST** /reports/inventory
-    - Gerar um relatório de estoque.
+    - Generate an inventory report.
