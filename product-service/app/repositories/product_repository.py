@@ -24,8 +24,8 @@ class ProductRepository:
         self.__db.refresh(product)
         return product
 
-    # * if manually add return Product | None, SQLAlchemy throws error
-    def findByName(self, name: str):
+    # ! if manually add return Product | None, SQLAlchemy throws error
+    def find_by_name(self, name: str):
         """Method to find product by name
 
         Args:

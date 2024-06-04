@@ -19,13 +19,11 @@ class ProductController:
             product (ProductCreate): Body from response that comes in ProductCreate format
 
         Raises:
-            ProductException: If there is an error on while tying to creare product raises
+            ProductException: If there is an error on while tying to creare product
         """
-        response: Product | None = self.__product_service.create(product)
+        response: Product | str = self.__product_service.create(product)
 
-        if response:
-            raise ProductException(
-                name="AlreadyExists", message="Product already exists"
-            )
+        if not isinstance(response, Product):
+            raise ProductException(name="AlreadyExists", message=response)
 
         return "Product successfully created"

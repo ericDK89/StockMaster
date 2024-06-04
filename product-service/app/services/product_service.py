@@ -11,7 +11,7 @@ class ProductService:
     def __init__(self, product_repository: ProductRepository) -> Product:
         self.__product_repository: ProductRepository = product_repository
 
-    # * if manually add return Product | None, SQLAlchemy throws error
+    # ! if manually add return str | Product, SQLAlchemy throws error
     def create(self, product: ProductCreate):
         """Method to create product
 
@@ -22,15 +22,14 @@ class ProductService:
             product (Product): Return the existing_product ou the created_product
         """
 
-        existing_product: Product | None = self.__product_repository.findByName(
+        existing_product: Product | None = self.__product_repository.find_by_name(
             product.name
         )
 
         if existing_product:
-            return existing_product
+            return f"Product with name '{existing_product.name}' already exists"
 
         product_instance = Product(**product.model_dump())
         created_product: Product = self.__product_repository.create(product_instance)
 
-        print(created_product)
         return created_product

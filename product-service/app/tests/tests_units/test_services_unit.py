@@ -1,10 +1,10 @@
 """File to test all product_service methods"""
 
-import pytest
 from unittest.mock import MagicMock
-from ..services.product_service import ProductService
-from ..schemas.product_schema import ProductCreate
-from ..models.product import Product
+import pytest
+from app.services.product_service import ProductService
+from app.schemas.product_schema import ProductCreate
+from app.models.product import Product
 
 
 @pytest.fixture(scope="function")
@@ -40,17 +40,17 @@ def test_create_product_when_product_already_exists(
     # * Create an instance of Product to simulate an existing product in the database
     existing_product = Product(id=1, **product_data.model_dump())
 
-    # * Mock the repository to return the existing_product when findByName is called
-    product_repository_mock.findByName.return_value = existing_product
+    # * Mock the repository to return the existing_product when find_by_name is called
+    product_repository_mock.find_by_name.return_value = existing_product
 
     # * Attempt to create a product with the same data
     result: Product = product_service.create(product_data)
 
-    # * Assert that the method findByName was called
-    product_repository_mock.findByName.assert_called_once()
+    # * Assert that the method find_by_name was called
+    product_repository_mock.find_by_name.assert_called_once()
 
-    # * Assert that the result is the same as the existing product
-    assert result == existing_product
+    # * Assert that the result has the name of product
+    assert product_data.name in result
 
 
 def test_create_product_when_product_dont_exists(
@@ -71,8 +71,8 @@ def test_create_product_when_product_dont_exists(
         stock_quantity=10,
     )
 
-    # * Mock the repository to return None when findByName is called, indicating that the product does not exist
-    product_repository_mock.findByName.return_value = None
+    # * Mock the repository to return None when find_by_name is called, indicating that the product does not exist
+    product_repository_mock.find_by_name.return_value = None
 
     # * Mock the repository to call the create method
     product_repository_mock.create.return_value = Product(**product_data.model_dump())
@@ -80,8 +80,8 @@ def test_create_product_when_product_dont_exists(
     # * Call the create method of the service
     result: Product = product_service.create(product_data)
 
-    # * Assert that the repository's findByName method was called once with the product name and didn't find anything
-    product_repository_mock.findByName.assert_called_once_with(product_data.name)
+    # * Assert that the repository's find_by_name method was called once with the product name and didn't find anything
+    product_repository_mock.find_by_name.assert_called_once_with(product_data.name)
 
     # * Assert that the repository's create method was called once
     product_repository_mock.create.assert_called_once()
