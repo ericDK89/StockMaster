@@ -24,4 +24,7 @@ class Config:
     )
 
 
-config = Config()
+class TestConfig:
+    """Class to create an in memory database with sqlite"""
+
+    DATABASE_URL: str = "sqlite:///./test.db"

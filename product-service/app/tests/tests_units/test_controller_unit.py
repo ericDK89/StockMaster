@@ -1,3 +1,5 @@
+"""File to takes unit tests for product-controller"""
+
 from unittest.mock import MagicMock
 import pytest
 from app.controllers.products_controllers import ProductController
