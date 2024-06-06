@@ -27,3 +27,11 @@ class ProductController:
             raise ProductException(name="AlreadyExists", message=response)
 
         return "Product successfully created"
+
+    def get_products(self):
+        """Method to return all products from db
+
+        Returns:
+            str: All products from db in str formatted
+        """
+        return self.__product_service.get_products()

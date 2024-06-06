@@ -3,7 +3,7 @@
 - ProductOut: Product with all props, and add the id
 """
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class ProductBase(BaseModel):
@@ -23,3 +23,5 @@ class ProductOut(ProductBase):
     """Class of product out, the product that will be return, adding the id"""
 
     id: int
+
+    model_config = ConfigDict(from_attributes=True)

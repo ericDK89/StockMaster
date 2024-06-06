@@ -1,5 +1,6 @@
 """File to takes unit tests for product-controller"""
 
+from typing import List
 from unittest.mock import MagicMock
 import pytest
 from app.controllers.products_controllers import ProductController
@@ -71,3 +72,38 @@ def test_try_to_create_product_with_the_same_name(
 
     # * Assert that the service mock create was called
     product_service_mock.create.assert_called_once_with(product_data)
+
+
+def test_get_all_products(
+    product_controller: ProductController, product_service_mock: MagicMock
+) -> None:
+    """Test to assert that it will return all products"""
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_data_two = ProductCreate(
+        name="Test Product two",
+        description="Test Description two",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    all_products: List[Product] = [
+        Product(id=1, **product_data_one.model_dump()),
+        Product(id=2, **product_data_two.model_dump()),
+    ]
+
+    product_service_mock.get_products.return_value = all_products
+
+    response: List[Product] = product_controller.get_products()
+
+    assert len(response) == 2
+
+    assert response[0].name == product_data_one.name
+    assert response[1].name == product_data_two.name
+
+    product_service_mock.get_products.assert_called_once()

@@ -1,6 +1,8 @@
 """File to handle all contact with db"""
 
+from typing import List
 from sqlalchemy.orm import Session
+from ..schemas.product_schema import ProductOut
 from ..models.product import Product
 
 
@@ -37,3 +39,11 @@ class ProductRepository:
         """
 
         return self.__db.query(Product).filter(Product.name == name).first()
+
+    def get_products(self) -> List[ProductOut]:
+        """Method to return all products
+
+        Returns:
+            List[Product]: return all products
+        """
+        return self.__db.query(Product).all()

@@ -11,8 +11,6 @@ load_dotenv()
 config = TestConfig() if os.getenv("TESTING") else Config()
 
 SQLALCHEMY_DATABASE_URL: str = config.DATABASE_URL
-print("sql", SQLALCHEMY_DATABASE_URL)
-print(os.getenv("TESTING"))
 
 engine: Engine = create_engine(SQLALCHEMY_DATABASE_URL)
 

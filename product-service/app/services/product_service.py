@@ -1,6 +1,8 @@
 """File to handle all product-service Services"""
 
-from ..schemas.product_schema import ProductCreate
+from typing import List
+from ..utils.products_to_json import products_to_json
+from ..schemas.product_schema import ProductCreate, ProductOut
 from ..repositories.product_repository import ProductRepository
 from ..models.product import Product
 
@@ -33,3 +35,17 @@ class ProductService:
         created_product: Product = self.__product_repository.create(product_instance)
 
         return created_product
+
+    def get_products(self):
+        """Method to return all products from db
+
+        Returns:
+            List[Product]: All products from db
+        """
+        products: List[ProductOut] = self.__product_repository.get_products()
+
+        validated_products: List[ProductOut] = [
+            ProductOut.model_validate(product) for product in products
+        ]
+
+        return products_to_json(validated_products)

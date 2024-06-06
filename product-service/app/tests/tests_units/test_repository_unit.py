@@ -1,9 +1,11 @@
 """File to takes unit tests for product-repository"""
 
-import pytest
+from typing import List
 from unittest.mock import MagicMock
+import pytest
 from sqlalchemy.orm import Session
 from app.models.product import Product
+from app.schemas.product_schema import ProductCreate
 from app.repositories.product_repository import ProductRepository
 
 
@@ -62,3 +64,35 @@ def test_find_by_name_if_product_exists(
     assert found_product == product_data
 
     db_session.query.return_value.filter.return_value.first.assert_called_once()
+
+
+def test_get_all_products(
+    product_repository: ProductRepository, db_session: MagicMock
+) -> None:
+    """Def to test the repository get_all_products"""
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_data_two = ProductCreate(
+        name="Test Product two",
+        description="Test Description two",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    db_session.query.return_value.all.return_value = [
+        Product(id=1, **product_data_one.model_dump()),
+        Product(id=2, **product_data_two.model_dump()),
+    ]
+
+    response: List[Product] = product_repository.get_products()
+
+    assert len(response) == 2
+    assert response[0].name == product_data_one.name
+    assert response[1].name == product_data_two.name
+
+    db_session.query.return_value.all.assert_called_once()

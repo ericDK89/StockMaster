@@ -1,5 +1,6 @@
 """File to test all product_service methods"""
 
+from typing import List
 from unittest.mock import MagicMock
 import pytest
 from app.services.product_service import ProductService
@@ -91,3 +92,35 @@ def test_create_product_when_product_dont_exists(
     assert result.description == product_data.description
     assert result.price == product_data.price
     assert result.stock_quantity == product_data.stock_quantity
+
+
+def test_get_products_service(
+    product_service: ProductService, product_repository_mock: MagicMock
+) -> None:
+    """Test to assert service to get products return a list of produtcs"""
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_data_two = ProductCreate(
+        name="Test Product two",
+        description="Test Description two",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_repository_mock.get_products.return_value = [
+        Product(id=1, **product_data_one.model_dump()),
+        Product(id=2, **product_data_two.model_dump()),
+    ]
+
+    products: List[Product] = product_service.get_products()
+
+    assert len(products) == 2
+    assert products[0]["name"] == product_data_one.name
+    assert products[1]["name"] == product_data_two.name
+
+    product_repository_mock.get_products.assert_called_once()

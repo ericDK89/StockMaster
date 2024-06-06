@@ -39,3 +39,27 @@ def create_product(
             status_code=500,
             content={"error": f"Internal Server Error \n Message: {str(e)}"},
         )
+
+
+@router.get("/products")
+def get_products(
+    product_controller: ProductController = Depends(get_product_controller),
+) -> JSONResponse:
+    """Route to get all products from db
+
+    Args:
+        product_controller (ProductController, optional): _description_. Defaults to Depends(get_product_controller).
+
+    Returns:
+        JSONResponse: return as json with "success" and the response (all products)
+    """
+    try:
+        response = product_controller.get_products()
+        print(response)
+        return JSONResponse(status_code=200, content={"success": response})
+
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"error": f"Internal Server Error \n Message: {str(e)}"},
+        )

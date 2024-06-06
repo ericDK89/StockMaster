@@ -2,11 +2,11 @@
 
 import os
 
+# ! Necessary initialize the os.environ before other import, if not the sql memory won't work for tests
 os.environ["TESTING"] = "1"
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
 from app.app import app
 from app.dependencies.product_dependencies import get_product_repository
 from app.models.product import Base
@@ -26,7 +26,7 @@ def db_session():
 
 
 @pytest.fixture(scope="function")
-def client(db_session: Session):
+def client():
     """Def to override the original get_db to the test db_session"""
     client = TestClient(app)
     yield client
