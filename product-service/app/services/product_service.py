@@ -53,7 +53,7 @@ class ProductService:
 
         return products_to_json(validated_products)
 
-    def get_product_by_id(self, product_id: int) -> ProductOut | None:
+    def get_product_by_id(self, product_id: int):
         """Method to get product by id from repository
 
         Args:

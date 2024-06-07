@@ -26,7 +26,7 @@ class ProductRepository:
         self.__db.refresh(product)
         return product
 
-    # ! if manually add return Product | None, SQLAlchemy throws error
+    # ! if manually add return ProductOut | None, SQLAlchemy throws error
     def find_by_name(self, name: str):
         """Method to find product by name
 
@@ -48,7 +48,8 @@ class ProductRepository:
         """
         return self.__db.query(Product).all()
 
-    def get_product_by_id(self, product_id: int) -> ProductOut | None:
+    # ! if manually add return ProductOut | None, SQLAlchemy throws error
+    def get_product_by_id(self, product_id: int):
         """Method to get product by id
 
         Args:

@@ -34,7 +34,12 @@ class ProductController:
         Returns:
             str: All products from db in str formatted
         """
-        return self.__product_service.get_products()
+        products = self.__product_service.get_products()
+
+        if not products:
+            return "Empty"
+
+        return products
 
     def get_product_by_id(self, product_id: int) -> ProductOut:
         """Method to get product by id
@@ -53,6 +58,6 @@ class ProductController:
         )
 
         if not product:
-            raise ProductException(message="Product not found", name="Not found")
+            raise ProductException(name="Not found", message="Product not found")
 
         return product
