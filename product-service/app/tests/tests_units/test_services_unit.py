@@ -4,7 +4,7 @@ from typing import List
 from unittest.mock import MagicMock
 import pytest
 from app.services.product_service import ProductService
-from app.schemas.product_schema import ProductCreate
+from app.schemas.product_schema import ProductCreate, ProductOut
 from app.models.product import Product
 
 
@@ -124,3 +124,34 @@ def test_get_products_service(
     assert products[1]["name"] == product_data_two.name
 
     product_repository_mock.get_products.assert_called_once()
+
+
+def test_get_product_by_id(
+    product_service: ProductService, product_repository_mock: MagicMock
+) -> None:
+    """Def to test get product by id service
+
+    Args:
+        product_service (ProductService): Product Service
+        product_repository_mock (MagicMock): Mock Product Repository
+    """
+
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_id = 1
+    product = Product(id=product_id, **product_data_one.model_dump())
+
+    product_repository_mock.get_product_by_id.return_value = product
+
+    response: ProductOut = product_service.get_product_by_id(product_id=product_id)
+
+    assert response.get("name") == product_data_one.name
+
+    product_repository_mock.get_product_by_id.assert_called_once_with(
+        product_id=product_id
+    )

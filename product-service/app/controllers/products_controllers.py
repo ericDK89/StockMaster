@@ -1,6 +1,6 @@
 """File to handle product-service controller"""
 
-from ..schemas.product_schema import ProductCreate
+from ..schemas.product_schema import ProductCreate, ProductOut
 from ..exceptions.product_execptions import ProductException
 from ..services.product_service import ProductService
 from ..models.product import Product
@@ -35,3 +35,24 @@ class ProductController:
             str: All products from db in str formatted
         """
         return self.__product_service.get_products()
+
+    def get_product_by_id(self, product_id: int) -> ProductOut:
+        """Method to get product by id
+
+        Args:
+            product_id (str): Product Id from path parameters
+
+        Raises:
+            ProductException: If product is None raise ProductException
+
+        Returns:
+            Product: Return product found
+        """
+        product: ProductOut | None = self.__product_service.get_product_by_id(
+            product_id=product_id
+        )
+
+        if not product:
+            raise ProductException(message="Product not found", name="Not found")
+
+        return product

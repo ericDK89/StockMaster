@@ -2,10 +2,11 @@
 
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
-from .schemas.product_schema import ProductCreate
+from .schemas.product_schema import ProductCreate, ProductOut
 from .exceptions.product_execptions import ProductException
 from .dependencies.product_dependencies import get_product_controller
 from .controllers.products_controllers import ProductController
+
 
 router = APIRouter()
 
@@ -58,6 +59,35 @@ def get_products(
         print(response)
         return JSONResponse(status_code=200, content={"success": response})
 
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"error": f"Internal Server Error \n Message: {str(e)}"},
+        )
+
+
+@router.get("/product/{product_id}")
+def get_product_by_id(
+    product_id: int,
+    product_controller: ProductController = Depends(get_product_controller),
+) -> JSONResponse:
+    """Def to get product by id
+
+    Args:
+        product_id (str): product_id from path paramets
+        product_controller (ProductController, optional): ProductController to use get_product_by_id method.
+        Defaults to Depends(get_product_controller).
+
+    Returns:
+        JSONResponse: Return a json with "success" or "error"
+    """
+    try:
+        product: ProductOut = product_controller.get_product_by_id(
+            product_id=product_id
+        )
+        return JSONResponse(status_code=200, content={"success": product})
+    except ProductException as e:
+        return JSONResponse(status_code=400, content={"error": str(e.message)})
     except Exception as e:
         return JSONResponse(
             status_code=500,

@@ -47,3 +47,14 @@ class ProductRepository:
             List[Product]: return all products
         """
         return self.__db.query(Product).all()
+
+    def get_product_by_id(self, product_id: int) -> ProductOut | None:
+        """Method to get product by id
+
+        Args:
+            product_id (str): Product id from response
+
+        Returns:
+            Product | None: Return Product or None if product not exist
+        """
+        return self.__db.query(Product).filter_by(id=product_id).first()

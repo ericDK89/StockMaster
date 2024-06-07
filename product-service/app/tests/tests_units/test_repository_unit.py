@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 import pytest
 from sqlalchemy.orm import Session
 from app.models.product import Product
-from app.schemas.product_schema import ProductCreate
+from app.schemas.product_schema import ProductCreate, ProductOut
 from app.repositories.product_repository import ProductRepository
 
 
@@ -57,13 +57,13 @@ def test_find_by_name_if_product_exists(
     )
 
     # ! Necessary to configure each step of the Session (SQLAlchemy) call
-    db_session.query.return_value.filter.return_value.first.return_value = product_data
+    db_session.query().filter().first.return_value = product_data
 
     found_product: Product = product_repository.find_by_name(product_data.name)
 
     assert found_product == product_data
 
-    db_session.query.return_value.filter.return_value.first.assert_called_once()
+    db_session.query().filter().first.assert_called_once()
 
 
 def test_get_all_products(
@@ -84,7 +84,7 @@ def test_get_all_products(
         stock_quantity=10,
     )
 
-    db_session.query.return_value.all.return_value = [
+    db_session.query().all.return_value = [
         Product(id=1, **product_data_one.model_dump()),
         Product(id=2, **product_data_two.model_dump()),
     ]
@@ -95,4 +95,35 @@ def test_get_all_products(
     assert response[0].name == product_data_one.name
     assert response[1].name == product_data_two.name
 
-    db_session.query.return_value.all.assert_called_once()
+    db_session.query().all.assert_called_once()
+
+
+def test_get_product_by_id(
+    product_repository: ProductRepository, db_session: MagicMock
+) -> None:
+    """Def to test get_product_by_id from repository
+
+    Args:
+        product_repository (ProductRepository): ProductRepository
+        db_session (MagicMock): Mock for db_session
+    """
+
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_id = 1
+    product = Product(id=product_id, **product_data_one.model_dump())
+
+    db_session.query().filter_by().first.return_value = product
+
+    response: ProductOut = product_repository.get_product_by_id(product_id=product_id)
+
+    print(response)
+
+    assert response.name == product_data_one.name
+
+    db_session.query().filter_by().first.assert_called_once()

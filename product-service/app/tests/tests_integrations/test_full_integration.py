@@ -1,13 +1,16 @@
 """File to handle integrations tests"""
 
+from fastapi import Response
+from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
 from typing import List
 from app.schemas.product_schema import ProductCreate
 from app.models.product import Product
 
 
-def test_create_product(client, db_session) -> None:
+def test_create_product(client: TestClient, db_session: Session) -> None:
     """Def to test creation product"""
-    create_response = client.post(
+    create_response: Response = client.post(
         "/products",
         json={
             "name": "Test Product",
@@ -33,7 +36,7 @@ def test_create_product(client, db_session) -> None:
     assert db_product.stock_quantity == 10
 
 
-def test_get_all_products(client, db_session) -> None:
+def test_get_all_products(client: TestClient, db_session: Session) -> None:
     """Def to integration test for get all products"""
     product_data_one = ProductCreate(
         name="Test Product",
@@ -57,6 +60,54 @@ def test_get_all_products(client, db_session) -> None:
     db_session.add_all(all_products)
     db_session.commit()
 
-    get_products = client.get("/products")
+    get_products: Response = client.get("/products")
 
     assert get_products.status_code == 200
+    assert get_products.json() == {
+        "success": [
+            {
+                "name": "Test Product",
+                "description": "Test Description",
+                "price": 9.99,
+                "stock_quantity": 10,
+                "id": 1,
+            },
+            {
+                "name": "Test Product two",
+                "description": "Test Description two",
+                "price": 9.99,
+                "stock_quantity": 10,
+                "id": 2,
+            },
+        ]
+    }
+
+
+def test_get_product_by_id(client: TestClient, db_session: Session) -> None:
+    """Def to integration test for get all products"""
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_id = 1
+    product: Product = Product(id=product_id, **product_data_one.model_dump())
+
+    db_session.add(product)
+    db_session.commit()
+    db_session.refresh(product)
+
+    get_product: Response = client.get(f"/product/{product_id}")
+
+    assert get_product.status_code == 200
+    assert get_product.json() == {
+        "success": {
+            "name": "Test Product",
+            "description": "Test Description",
+            "price": 9.99,
+            "stock_quantity": 10,
+            "id": 1,
+        }
+    }

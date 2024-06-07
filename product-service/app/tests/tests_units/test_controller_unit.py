@@ -11,7 +11,7 @@ from app.exceptions.product_execptions import ProductException
 
 
 @pytest.fixture(scope="function")
-def product_service_mock():
+def product_service_mock() -> MagicMock:
     """Def to create MagicMock"""
     return MagicMock(spec=ProductService)
 
@@ -107,3 +107,35 @@ def test_get_all_products(
     assert response[1].name == product_data_two.name
 
     product_service_mock.get_products.assert_called_once()
+
+
+def test_get_product_by_id(
+    product_controller: ProductController, product_service_mock: MagicMock
+) -> None:
+    """Def to test get_product_by_id controller
+
+    Args:
+        product_controller (ProductController): ProductController
+        product_service_mock (MagicMock): Mock for ProductService
+    """
+
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_id = 1
+
+    product = Product(id=product_id, **product_data_one.model_dump())
+
+    product_service_mock.get_product_by_id.return_value = product
+
+    response: Product = product_controller.get_product_by_id(product_id=product_id)
+
+    assert response.name == product_data_one.name
+
+    product_service_mock.get_product_by_id.assert_called_once_with(
+        product_id=product_id
+    )
