@@ -177,3 +177,30 @@ def test_update_product_by_id(client: TestClient, db_session: Session) -> None:
             "id": 1,
         }
     }
+
+
+def test_delete_product_by_id(client: TestClient, db_session: Session) -> None:
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_id = 1
+
+    product: Product = Product(id=product_id, **product_data_one.model_dump())
+
+    db_session.add(product)
+    db_session.commit()
+    db_session.refresh(product)
+
+    response: Response = client.delete(f"/product/{product_id}")
+
+    assert response.status_code == 204
+
+    db_product: Product = (
+        db_session.query(Product).filter(Product.id == product_id).first()
+    )
+
+    assert db_product == None

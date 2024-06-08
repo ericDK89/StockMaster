@@ -154,7 +154,7 @@ def delete_product_by_id(
     """
     try:
         response: str = product_controller.delete_product_by_id(product_id)
-        return JSONResponse(status_code=204, content={"sucess": response})
+        return JSONResponse(status_code=204, content={})
 
     except ProductException as e:
         return JSONResponse(status_code=404, content={"error": str(e)})

@@ -89,11 +89,15 @@ class ProductService:
         if not self.get_product_by_id(product_id=product_id):
             return None
 
+        print("da", data)
         product: ProductOut | None = self.__product_repository.update_product_by_id(
             product_id=product_id, data=data
         )
+        print("pro", product)
 
         validate_product: ProductOut = ProductOut.model_validate(product)
+
+        print("va", validate_product)
 
         return product_to_json(product=validate_product)
 
