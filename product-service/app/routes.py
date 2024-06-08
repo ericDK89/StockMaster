@@ -93,3 +93,18 @@ def get_product_by_id(
             status_code=500,
             content={"error": f"Internal Server Error \n Message: {str(e)}"},
         )
+
+
+@router.put("/product/{product_id}")
+def update_product_by_id(
+    product_id: str,
+    product_controller: ProductController = Depends(get_product_controller),
+) -> JSONResponse:
+    try:
+        return JSONResponse(
+            status_code=200, content={"success": "Product successfully updated"}
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=500, content={f"Internal Server Error \n Message: {str(e)}"}
+        )

@@ -2,7 +2,7 @@
 
 from typing import List
 from sqlalchemy.orm import Session
-from ..schemas.product_schema import ProductOut
+from ..schemas.product_schema import ProductOut, ProductCreate
 from ..models.product import Product
 
 
@@ -59,3 +59,29 @@ class ProductRepository:
             Product | None: Return Product or None if product not exist
         """
         return self.__db.query(Product).filter_by(id=product_id).first()
+
+    def update_product_by_id(self, product_id: int, data: ProductCreate):
+        """Method to update product by id
+
+        Args:
+            product_id (int): Product id from path parameters
+            data (ProductCreate): Data to update product by id with ProductCreate schema format
+
+        Returns:
+            None: If product not exist return None
+            ProductOut: If product exist return ProductOut
+        """
+
+        # write a doc string for this method
+
+        product: ProductOut | None = (
+            self.__db.query(Product).filter_by(id == product_id).first()
+        )
+
+        if product:
+            for key, value in data.model_dump().items():
+                setattr(product, key, value)
+            self.__db.commit()
+            self.__db.refresh(product)
+
+        return product
