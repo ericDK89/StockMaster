@@ -26,7 +26,6 @@ class ProductUpdate(ProductBase):
     name: Optional[str] = None
     description: Optional[str] = None
     price: Optional[float] = None
-    stock_quantity: Optional[int] = None
 
 
 class ProductOut(ProductBase):

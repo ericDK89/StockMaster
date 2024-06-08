@@ -77,9 +77,10 @@ class ProductRepository:
         )
 
         if product:
-            for key, value in data.model_dump().items():
-                if value is not None:
-                    setattr(product, key, value)
+            for key, value in data.model_dump(
+                exclude="stock_quantity", exclude_unset=True
+            ).items():
+                setattr(product, key, value)
             self.__db.commit()
             self.__db.refresh(product)
 
