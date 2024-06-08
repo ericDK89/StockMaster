@@ -28,7 +28,7 @@ Cada serviço possui sua própria configuração, modelo de dados e rotas.
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/ericDK89/inventory-management.git
+   git clone https://github.com/ericDK89/StockMaster.git
    cd inventory-management
    ```
 
@@ -114,7 +114,7 @@ Each service has its own configuration, data model, and routes.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/ericDK89/inventory-management.git
+   git clone https://github.com/ericDK89/StockMaster.git
    cd inventory-management
    ```
 
