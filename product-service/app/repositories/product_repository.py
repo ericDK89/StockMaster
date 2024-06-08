@@ -2,8 +2,8 @@
 
 from typing import List
 from sqlalchemy.orm import Session
-from ..schemas.product_schema import ProductOut, ProductUpdate
-from ..models.product import Product
+from schemas.product_schema import ProductOut, ProductUpdate
+from models.product import Product
 
 
 class ProductRepository:

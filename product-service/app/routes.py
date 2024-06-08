@@ -2,10 +2,10 @@
 
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
-from .schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
-from .exceptions.product_execptions import ProductException
-from .dependencies.product_dependencies import get_product_controller
-from .controllers.products_controllers import ProductController
+from schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
+from exceptions.product_execptions import ProductException
+from dependencies.product_dependencies import get_product_controller
+from controllers.products_controllers import ProductController
 
 
 router = APIRouter()

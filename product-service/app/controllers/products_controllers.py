@@ -1,9 +1,9 @@
 """File to handle product-service controller"""
 
-from ..schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
-from ..exceptions.product_execptions import ProductException
-from ..services.product_service import ProductService
-from ..models.product import Product
+from schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
+from exceptions.product_execptions import ProductException
+from services.product_service import ProductService
+from models.product import Product
 
 
 class ProductController:
@@ -63,10 +63,6 @@ class ProductController:
         return product
 
     def update_product_by_id(self, product_id: int, data: ProductUpdate) -> Product:
-        product: ProductOut | None = self.__product_service.update_product_by_id(
-            product_id=product_id, data=data
-        )
-
         """
         Updates an existing product identified by product_id with the new data provided.
 
@@ -80,6 +76,9 @@ class ProductController:
         Returns:
             Product: Returns the updated product if the update is successful.
         """
+        product: ProductOut | None = self.__product_service.update_product_by_id(
+            product_id=product_id, data=data
+        )
 
         if not product:
             raise ProductException(

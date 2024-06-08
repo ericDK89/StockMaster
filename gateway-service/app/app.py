@@ -29,11 +29,11 @@ async def proxy(request: Request, service_url: str) -> JSONResponse:
 @app.get("/products")
 @app.post("/products")
 async def proxy_products(request: Request) -> JSONResponse:
-    return await proxy(request=request, service_url="http://product-service:8000")
+    return await proxy(request=request, service_url="http://product-service:8001")
 
 
 @app.get("/product/{product_id}")
 @app.put("/product/{product_id}")
 @app.delete("/product/{product_id}")
 async def proxy_product(request: Request) -> JSONResponse:
-    return await proxy(request=request, service_url="http://product-service:8000")
+    return await proxy(request=request, service_url="http://product-service:8001")

@@ -1,7 +1,7 @@
 """Models for product-service"""
 
 from sqlalchemy import Column, Integer, String, Float
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
@@ -15,4 +15,4 @@ class Product(Base):
     name = Column(String, index=True, nullable=False)
     description = Column(String, nullable=False)
     price = Column(Float, nullable=False)
-    stock_quantity = Column(Float, nullable=False)
+    stock = relationship("Stock", back_populates="product", uselist=False)

@@ -1,7 +1,7 @@
 """File with the util to turn ProductOut type into JSON"""
 
 import json
-from ..schemas.product_schema import ProductOut
+from schemas.product_schema import ProductOut
 from typing import List
 
 

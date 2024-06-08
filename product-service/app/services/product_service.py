@@ -1,10 +1,10 @@
 """File to handle all product-service Services"""
 
-from typing import List, Dict, Any
-from ..utils.products_to_json import products_to_json, product_to_json
-from ..schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
-from ..repositories.product_repository import ProductRepository
-from ..models.product import Product
+from typing import List
+from utils.products_to_json import products_to_json, product_to_json
+from schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
+from repositories.product_repository import ProductRepository
+from models.product import Product
 
 
 class ProductService:
@@ -45,7 +45,7 @@ class ProductService:
         products: List[ProductOut] = self.__product_repository.get_products()
 
         if len(products) == 0:
-            return
+            return None
 
         validated_products: List[ProductOut] = [
             ProductOut.model_validate(product) for product in products

@@ -1,10 +1,10 @@
 """Project Service FastAPI app.py config"""
 
 from fastapi import FastAPI
-from app.config import Config
-from .models.product import Base
-from .db.database import engine
-from .routes import router
+from config import Config
+from models.product import Base
+from db.database import engine
+from routes import router
 
 config = Config()
 

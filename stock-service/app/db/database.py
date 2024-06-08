@@ -1,5 +1,3 @@
-"""File to handle db creation from product-service"""
-
 import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, Engine
@@ -18,7 +16,6 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def get_db():
-    """Def to start and close db"""
     db: Session = SessionLocal()
     try:
         yield db
