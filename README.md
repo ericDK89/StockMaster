@@ -1,4 +1,4 @@
-# Sistema de Gestão de Estoque
+# StockMaster
 
 ## Descrição
 Este projeto é um sistema de gestão de estoque que permite a administração de produtos, controle de estoque e geração de relatórios. Ele é construído utilizando uma arquitetura de microserviços com Python e FastAPI.
