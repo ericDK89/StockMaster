@@ -1,11 +1,11 @@
 """File to takes unit tests for product-repository"""
 
-from typing import List
+from typing import List, Dict
 from unittest.mock import MagicMock
 import pytest
 from sqlalchemy.orm import Session
 from app.models.product import Product
-from app.schemas.product_schema import ProductCreate, ProductOut
+from app.schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
 from app.repositories.product_repository import ProductRepository
 
 
@@ -127,3 +127,35 @@ def test_get_product_by_id(
     assert response.name == product_data_one.name
 
     db_session.query().filter().first.assert_called_once()
+
+
+def test_update_product_by_id(
+    product_repository: ProductRepository, db_session: MagicMock
+) -> None:
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_id = 1
+    existing_product = Product(id=product_id, **product_data_one.model_dump())
+
+    db_session.query().filter().first.return_value = existing_product
+
+    data_update_product = ProductUpdate(name="Updated Product")
+
+    updated_product: Product = product_repository.update_product_by_id(
+        product_id=product_id, data=data_update_product
+    )
+
+    assert updated_product.name == "Updated Product"
+
+    db_session.query().filter().first.assert_called_once()
+
+
+# def test_delete_product_by_id(
+#     product_repository: ProductRepository, db_session: MagicMock
+# ) -> None:
+#     db_session.query()

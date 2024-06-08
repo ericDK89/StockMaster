@@ -2,7 +2,7 @@
 
 from typing import List
 from sqlalchemy.orm import Session
-from ..schemas.product_schema import ProductOut, ProductCreate
+from ..schemas.product_schema import ProductOut, ProductUpdate
 from ..models.product import Product
 
 
@@ -58,9 +58,9 @@ class ProductRepository:
         Returns:
             Product | None: Return Product or None if product not exist
         """
-        return self.__db.query(Product).filter(Product.id == 1).first()
+        return self.__db.query(Product).filter(Product.id == product_id).first()
 
-    def update_product_by_id(self, product_id: int, data: ProductCreate):
+    def update_product_by_id(self, product_id: int, data: ProductUpdate):
         """Method to update product by id
 
         Args:
@@ -78,8 +78,36 @@ class ProductRepository:
 
         if product:
             for key, value in data.model_dump().items():
-                setattr(product, key, value)
+                if value is not None:
+                    setattr(product, key, value)
             self.__db.commit()
             self.__db.refresh(product)
 
         return product
+
+    def delete_product_by_id(self, product_id: int):
+        """
+        Deletes a product by its ID.
+
+        This method queries the database for the product with the given ID.
+        If the product exists, it deletes the product from the database and commits the transaction.
+        If the product is successfully deleted, it returns a success message.
+        If the product does not exist, it returns None.
+
+        Args:
+            product_id (int): The ID of the product to be deleted.
+
+        Returns:
+            str: A success message if the product is deleted.
+            None: If the product does not exist.
+        """
+        product: ProductOut | None = (
+            self.__db.query(Product).filter(Product.id == product_id).first()
+        )
+
+        if product:
+            self.__db.delete(product)
+            self.__db.commit()
+            return str("Product successfully deleted")
+
+        return None

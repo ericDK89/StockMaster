@@ -114,6 +114,21 @@ def test_get_product_by_id(client: TestClient, db_session: Session) -> None:
 
 
 def test_update_product_by_id(client: TestClient, db_session: Session) -> None:
+    """
+    Tests the update of a product by ID.
+
+    This test creates a new product with a specific ID and then makes a PUT request to update the product details.
+    After the request, it checks if the response status is 200 (success) and if the product in the database was correctly updated.
+    Finally, it checks if the JSON response matches the updated product.
+
+    Args:
+        client (TestClient): Test client for making requests.
+        db_session (Session): SQLAlchemy session for interacting with the database.
+
+    Returns:
+        None
+    """
+
     product_data_one = ProductCreate(
         name="Test Product",
         description="Test Description",

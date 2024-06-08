@@ -1,6 +1,6 @@
 """File to handle product-service controller"""
 
-from ..schemas.product_schema import ProductCreate, ProductOut
+from ..schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
 from ..exceptions.product_execptions import ProductException
 from ..services.product_service import ProductService
 from ..models.product import Product
@@ -62,7 +62,7 @@ class ProductController:
 
         return product
 
-    def update_product_by_id(self, product_id: int, data=ProductCreate) -> Product:
+    def update_product_by_id(self, product_id: int, data: ProductUpdate) -> Product:
         product: ProductOut | None = self.__product_service.update_product_by_id(
             product_id=product_id, data=data
         )
@@ -87,3 +87,31 @@ class ProductController:
             )
 
         return product
+
+    def delete_product_by_id(self, product_id: int):
+        """
+        Deletes a product by its ID.
+
+        This method uses the ProductService to delete the product with the given ID.
+        If the product does not exist, it raises a ProductException.
+        If the product is successfully deleted, it returns a success message.
+
+        Args:
+            product_id (int): The ID of the product to be deleted.
+
+        Returns:
+            str: A success message if the product is deleted.
+
+        Raises:
+            ProductException: If the product does not exist.
+        """
+        response: str | None = self.__product_service.delete_product_by_id(
+            product_id=product_id
+        )
+
+        if not response:
+            raise ProductException(
+                message="Product doesn't exist", name="Product doesn't exist"
+            )
+
+        return response

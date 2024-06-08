@@ -4,6 +4,7 @@
 """
 
 from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 
 class ProductBase(BaseModel):
@@ -17,6 +18,15 @@ class ProductBase(BaseModel):
 
 class ProductCreate(ProductBase):
     """Class of product create with all bases props"""
+
+
+class ProductUpdate(ProductBase):
+    """Class of product update, where update fields are optional"""
+
+    name: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[float] = None
+    stock_quantity: Optional[int] = None
 
 
 class ProductOut(ProductBase):

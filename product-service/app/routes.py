@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
-from .schemas.product_schema import ProductCreate, ProductOut
+from .schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
 from .exceptions.product_execptions import ProductException
 from .dependencies.product_dependencies import get_product_controller
 from .controllers.products_controllers import ProductController
@@ -30,7 +30,7 @@ def create_product(
         return JSONResponse(status_code=201, content={"success": response})
 
     except ProductException as e:
-        return JSONResponse(status_code=400, content={"error": str(e.message)})
+        return JSONResponse(status_code=404, content={"error": str(e.message)})
 
     except HTTPException as e:
         return JSONResponse(status_code=400, content={"error": str(e.detail)})
@@ -86,8 +86,9 @@ def get_product_by_id(
             product_id=product_id
         )
         return JSONResponse(status_code=200, content={"success": product})
+
     except ProductException as e:
-        return JSONResponse(status_code=400, content={"error": str(e.message)})
+        return JSONResponse(status_code=404, content={"error": str(e.message)})
     except Exception as e:
         return JSONResponse(
             status_code=500,
@@ -98,7 +99,7 @@ def get_product_by_id(
 @router.put("/product/{product_id}")
 def update_product_by_id(
     product_id: int,
-    product: ProductCreate,
+    product: ProductUpdate,
     product_controller: ProductController = Depends(get_product_controller),
 ) -> JSONResponse:
     """
@@ -125,6 +126,38 @@ def update_product_by_id(
 
     except ProductException as e:
         return JSONResponse(status_code=404, content={"error": str(e.message)})
+    except Exception as e:
+        return JSONResponse(
+            status_code=500, content={f"Internal Server Error \n Message: {str(e)}"}
+        )
+
+
+@router.delete("/product/{product_id}")
+def delete_product_by_id(
+    product_id: int,
+    product_controller: ProductController = Depends(get_product_controller),
+) -> None:
+    """
+    Deletes a product by its ID.
+
+    This function receives a product ID as a path parameter and uses the ProductController to delete the product.
+    If the product is successfully deleted, it returns a JSON response with a status code of 204 and a success message.
+    If a ProductException is raised during the process, it returns a JSON response with a status code of 404 and the error message.
+    For any other exceptions, it returns a JSON response with a status code of 500 and the error message.
+
+    Args:
+        product_id (int): The ID of the product to be deleted.
+        product_controller (ProductController): The controller used to perform the delete operation. This is injected by the FastAPI Depends mechanism.
+
+    Returns:
+        None
+    """
+    try:
+        response: str = product_controller.delete_product_by_id(product_id)
+        return JSONResponse(status_code=204, content={"sucess": response})
+
+    except ProductException as e:
+        return JSONResponse(status_code=404, content={"error": str(e)})
     except Exception as e:
         return JSONResponse(
             status_code=500, content={f"Internal Server Error \n Message: {str(e)}"}

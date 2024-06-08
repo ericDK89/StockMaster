@@ -1,8 +1,8 @@
 """File to handle all product-service Services"""
 
-from typing import List
+from typing import List, Dict, Any
 from ..utils.products_to_json import products_to_json, product_to_json
-from ..schemas.product_schema import ProductCreate, ProductOut
+from ..schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
 from ..repositories.product_repository import ProductRepository
 from ..models.product import Product
 
@@ -73,7 +73,7 @@ class ProductService:
 
         return product_to_json(validate_product)
 
-    def update_product_by_id(self, product_id: int, data: ProductCreate):
+    def update_product_by_id(self, product_id: int, data: ProductUpdate):
         """
         Updates an existing product identified by product_id with the new data provided.
 
@@ -85,13 +85,29 @@ class ProductService:
             ProductOut: Returns the updated product as a ProductOut instance if the update is successful.
             None: Returns None if no product with the provided product_id is found.
         """
+
+        if not self.get_product_by_id(product_id=product_id):
+            return None
+
         product: ProductOut | None = self.__product_repository.update_product_by_id(
             product_id=product_id, data=data
         )
 
-        if not product:
-            return None
-
         validate_product: ProductOut = ProductOut.model_validate(product)
 
         return product_to_json(product=validate_product)
+
+    def delete_product_by_id(self, product_id: int):
+        """
+        Deletes a product by its ID.
+
+        This method uses the ProductRepository to delete the product with the given ID.
+        It delegates the deletion process to the repository and returns the result.
+
+        Args:
+            product_id (int): The ID of the product to be deleted.
+
+        Returns:
+            The result of the deletion operation from the ProductRepository.
+        """
+        return self.__product_repository.delete_product_by_id(product_id=product_id)

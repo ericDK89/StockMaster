@@ -201,3 +201,35 @@ def test_update_product_by_id(
     product_repository_mock.update_product_by_id.assert_called_once_with(
         product_id=product_id, data=product_data_one
     )
+
+
+def test_delete_product_by_id(
+    product_service: ProductService, product_repository_mock: MagicMock
+) -> None:
+    """
+    Testa o método delete_product_by_id do ProductService.
+
+    Este teste verifica se o método delete_product_by_id do ProductService chama o método delete_product_by_id do ProductRepository com os argumentos corretos e se lida corretamente com o valor de retorno.
+
+    Args:
+        product_service (ProductService): O ProductService a ser testado.
+        product_repository_mock (MagicMock): Um mock do ProductRepository.
+
+    Returns:
+        None
+    """
+    product_id = 1
+
+    product_repository_mock.delete_product_by_id.return_value = (
+        "Product successfully deleted"
+    )
+
+    response: str = product_service.delete_product_by_id(product_id=product_id)
+
+    print(response)
+
+    assert response == "Product successfully deleted"
+
+    product_repository_mock.delete_product_by_id.assert_called_once_with(
+        product_id=product_id
+    )
