@@ -4,8 +4,9 @@
 Este projeto é um sistema de gestão de estoque que permite a administração de produtos, controle de estoque e geração de relatórios. Ele é construído utilizando uma arquitetura de microserviços com Python e FastAPI.
 
 ## Estrutura do Projeto
-O projeto está dividido em três microserviços principais:
+O projeto está dividido em quatro microserviços principais:
 
+- **gateway-service**: Centraliza as requisições dos serviços em uma única porta.
 - **product-service:** Gerencia os produtos no estoque.
 - **stock-service:** Controla a quantidade de produtos em estoque.
 - **report-service:** Gera relatórios sobre o estoque.
@@ -20,7 +21,6 @@ Cada serviço possui sua própria configuração, modelo de dados e rotas.
 - Docker
 - Docker Compose
 - Pandas
-- Pytest
 
 ## Configuração e Execução
 
@@ -47,13 +47,9 @@ Cada serviço possui sua própria configuração, modelo de dados e rotas.
      ```
 
 4. **Acesse a aplicação:**
-    - O product-service estará rodando em http://localhost:8000.
-    - O stock-service e report-service estarão rodando em suas respectivas portas configuradas no docker-compose.yml.
+    - O gateway-service estará rodando em http://localhost:8000.
+    - O product-service, stock-service e report-service estarão rodando em suas respectivas portas configuradas no docker-compose.yml.
 
-## Executando Testes
-Para executar os testes, execute o seguinte comando:
-
-    pytest
 
 ## Endpoints
 
@@ -111,7 +107,6 @@ Each service has its own configuration, data model, and routes.
 - Docker
 - Docker Compose
 - Pandas
-- Pytest
 
 ## Setup and Execution
 
@@ -138,13 +133,8 @@ Each service has its own configuration, data model, and routes.
      ```
 
 4. **Access the application:**
-    - O product-service estará rodando em http://localhost:8000.
-    - O stock-service e report-service estarão rodando em suas respectivas portas configuradas no docker-compose.yml.
-
-## Running Tests
-To run the tests, execute the following command:
-
-    pytest
+    - The gateway-service will be running at http://localhost:8000.
+    - The product-service, stock-service, and report-service will be running on their respective ports configured in the docker-compose.yml.
 
 ## Endpoints
 
