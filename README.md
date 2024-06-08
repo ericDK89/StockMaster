@@ -85,7 +85,7 @@ Cada serviço possui sua própria configuração, modelo de dados e rotas.
 
 ---
 
-# Inventory Management System
+# StockMaster
 
 ## Description
 This project is an inventory management system that allows for the administration of products, stock control, and report generation. It is built using a microservices architecture with Python and FastAPI.
