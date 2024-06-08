@@ -1,6 +1,6 @@
 """File to test all product_service methods"""
 
-from typing import List, Dict
+from typing import List
 from unittest.mock import MagicMock
 import pytest
 from app.services.product_service import ProductService
@@ -200,6 +200,8 @@ def test_update_product_by_id(
     response: ProductOut = product_service.update_product_by_id(
         product_id=product_id, data=updated_product
     )
+
+    print(response)
 
     assert response.get("name") == expected_product.name
 

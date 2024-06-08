@@ -3,8 +3,8 @@
 - ProductOut: Product with all props, and add the id
 """
 
-from pydantic import BaseModel, ConfigDict
 from typing import Optional
+from pydantic import BaseModel, ConfigDict
 
 
 class ProductBase(BaseModel):
@@ -26,6 +26,7 @@ class ProductUpdate(ProductBase):
     name: Optional[str] = None
     description: Optional[str] = None
     price: Optional[float] = None
+    stock_quantity: Optional[int] = None
 
 
 class ProductOut(ProductBase):

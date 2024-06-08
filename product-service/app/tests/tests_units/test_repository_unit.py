@@ -155,7 +155,23 @@ def test_update_product_by_id(
     db_session.query().filter().first.assert_called_once()
 
 
-# def test_delete_product_by_id(
-#     product_repository: ProductRepository, db_session: MagicMock
-# ) -> None:
-#     db_session.query()
+def test_delete_product_by_id(
+    product_repository: ProductRepository, db_session: MagicMock
+) -> None:
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_id = 1
+    existing_product = Product(id=product_id, **product_data_one.model_dump())
+
+    db_session.query().filter().first.return_value = existing_product
+
+    response: str = product_repository.delete_product_by_id(product_id=product_id)
+
+    assert response == "Product successfully deleted"
+
+    db_session.query().filter().first.assert_called_once()
