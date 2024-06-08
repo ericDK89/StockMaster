@@ -72,3 +72,26 @@ class ProductService:
         validate_product: ProductOut = ProductOut.model_validate(product)
 
         return product_to_json(validate_product)
+
+    def update_product_by_id(self, product_id: int, data: ProductCreate):
+        """
+        Updates an existing product identified by product_id with the new data provided.
+
+        Args:
+            product_id (int): The ID of the product to update.
+            data (ProductCreate): The new product data for update.
+
+        Returns:
+            ProductOut: Returns the updated product as a ProductOut instance if the update is successful.
+            None: Returns None if no product with the provided product_id is found.
+        """
+        product: ProductOut | None = self.__product_repository.update_product_by_id(
+            product_id=product_id, data=data
+        )
+
+        if not product:
+            return None
+
+        validate_product: ProductOut = ProductOut.model_validate(product)
+
+        return product_to_json(product=validate_product)

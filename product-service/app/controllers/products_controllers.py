@@ -61,3 +61,29 @@ class ProductController:
             raise ProductException(name="Not found", message="Product not found")
 
         return product
+
+    def update_product_by_id(self, product_id: int, data=ProductCreate) -> Product:
+        product: ProductOut | None = self.__product_service.update_product_by_id(
+            product_id=product_id, data=data
+        )
+
+        """
+        Updates an existing product identified by product_id with the new data provided.
+
+        Args:
+            product_id (int): The ID of the product to update.
+            data (ProductCreate): The new product data for update.
+
+        Raises:
+            ProductException: If no product with the provided product_id is found.
+
+        Returns:
+            Product: Returns the updated product if the update is successful.
+        """
+
+        if not product:
+            raise ProductException(
+                message="Product not found", name="Product not found"
+            )
+
+        return product

@@ -4,7 +4,7 @@ from fastapi import Response
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from typing import List
-from app.schemas.product_schema import ProductCreate
+from app.schemas.product_schema import ProductCreate, ProductOut
 from app.models.product import Product
 
 
@@ -105,6 +105,57 @@ def test_get_product_by_id(client: TestClient, db_session: Session) -> None:
     assert get_product.json() == {
         "success": {
             "name": "Test Product",
+            "description": "Test Description",
+            "price": 9.99,
+            "stock_quantity": 10,
+            "id": 1,
+        }
+    }
+
+
+def test_update_product_by_id(client: TestClient, db_session: Session) -> None:
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_id = 1
+
+    product: Product = Product(id=product_id, **product_data_one.model_dump())
+
+    db_session.add(product)
+    db_session.commit()
+    db_session.refresh(product)
+
+    response: Response = client.put(
+        f"/product/{product_id}",
+        json={
+            "name": "Update Test Product",
+            "description": "Test Description",
+            "price": 9.99,
+            "stock_quantity": 10,
+        },
+    )
+
+    assert response.status_code == 200
+
+    db_product: Product = (
+        db_session.query(Product).filter(Product.id == product_id).first()
+    )
+
+    # * Make all instances reload
+    db_session.expire_all()
+
+    assert db_product.name == "Update Test Product"
+    assert db_product.description == "Test Description"
+    assert db_product.price == 9.99
+    assert db_product.stock_quantity == 10
+
+    assert response.json() == {
+        "success": {
+            "name": "Update Test Product",
             "description": "Test Description",
             "price": 9.99,
             "stock_quantity": 10,

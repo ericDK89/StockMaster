@@ -155,3 +155,49 @@ def test_get_product_by_id(
     product_repository_mock.get_product_by_id.assert_called_once_with(
         product_id=product_id
     )
+
+
+def test_update_product_by_id(
+    product_service: ProductService, product_repository_mock: MagicMock
+) -> None:
+    """
+    Unit test for the 'update_product_by_id' method of the ProductService class.
+
+    This test checks if the 'update_product_by_id' method of the ProductService class calls the
+    'update_product_by_id' method of the product repository with the correct arguments and returns the expected product.
+
+    Args:
+        product_service (ProductService): An instance of ProductService to test.
+        product_repository_mock (MagicMock): A mock product repository to simulate its behavior.
+
+    Raises:
+        AssertionError: If the test fails.
+    """
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_id = 1
+
+    expected_product = ProductOut(
+        id=product_id,
+        name=product_data_one.name,
+        description=product_data_one.description,
+        price=product_data_one.price,
+        stock_quantity=product_data_one.stock_quantity,
+    )
+
+    product_repository_mock.update_product_by_id.return_value = expected_product
+
+    response: ProductOut = product_service.update_product_by_id(
+        product_id=product_id, data=product_data_one
+    )
+
+    assert response.get("name") == expected_product.name
+
+    product_repository_mock.update_product_by_id.assert_called_once_with(
+        product_id=product_id, data=product_data_one
+    )

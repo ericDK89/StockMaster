@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 import pytest
 from app.controllers.products_controllers import ProductController
 from app.services.product_service import ProductService
-from app.schemas.product_schema import ProductCreate
+from app.schemas.product_schema import ProductCreate, ProductOut
 from app.models.product import Product
 from app.exceptions.product_execptions import ProductException
 
@@ -138,4 +138,51 @@ def test_get_product_by_id(
 
     product_service_mock.get_product_by_id.assert_called_once_with(
         product_id=product_id
+    )
+
+
+def test_update_product_by_id(
+    product_controller: ProductController, product_service_mock: MagicMock
+) -> None:
+    """
+    Unit test for the 'update_product_by_id' method of the ProductController class.
+
+    This test checks if the 'update_product_by_id' method of the ProductController class calls the
+    'update_product_by_id' method of the product service with the correct arguments and returns the expected product.
+
+    Args:
+        product_controller (ProductController): An instance of ProductController to test.
+        product_service_mock (MagicMock): A mock product service to simulate its behavior.
+
+    Raises:
+        AssertionError: If the test fails.
+    """
+
+    product_data_one = ProductCreate(
+        name="Test Product",
+        description="Test Description",
+        price=9.99,
+        stock_quantity=10,
+    )
+
+    product_id = 1
+
+    expected_product = ProductCreate(
+        id=product_id,
+        name=product_data_one.name,
+        description=product_data_one.description,
+        price=product_data_one.price,
+        stock_quantity=product_data_one.stock_quantity,
+    )
+
+    product_service_mock.update_product_by_id.return_value = expected_product
+
+    response: ProductOut = product_controller.update_product_by_id(
+        product_id=product_id, data=product_data_one
+    )
+
+    assert response == expected_product
+
+    product_service_mock.update_product_by_id.assert_called_once_with(
+        product_id=product_id, data=product_data_one
     )

@@ -118,7 +118,7 @@ def test_get_product_by_id(
     product_id = 1
     product = Product(id=product_id, **product_data_one.model_dump())
 
-    db_session.query().filter_by().first.return_value = product
+    db_session.query().filter().first.return_value = product
 
     response: ProductOut = product_repository.get_product_by_id(product_id=product_id)
 
@@ -126,4 +126,4 @@ def test_get_product_by_id(
 
     assert response.name == product_data_one.name
 
-    db_session.query().filter_by().first.assert_called_once()
+    db_session.query().filter().first.assert_called_once()

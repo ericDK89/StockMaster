@@ -97,13 +97,34 @@ def get_product_by_id(
 
 @router.put("/product/{product_id}")
 def update_product_by_id(
-    product_id: str,
+    product_id: int,
+    product: ProductCreate,
     product_controller: ProductController = Depends(get_product_controller),
 ) -> JSONResponse:
+    """
+    Updates an existing product identified by product_id with the new data provided.
+
+    Args:
+        product_id (int): The ID of the product to update.
+        product (ProductCreate): The new product data for update.
+        product_controller (ProductController, optional): ProductController to use update_product_by_id method.
+        Defaults to Depends(get_product_controller).
+
+    Returns:
+        JSONResponse: Returns a JSON response with status code 200 and a "success" key containing the updated product
+                      if the update is successful. Returns a JSON response with status code 404 and an "error" key if
+                      no product with the provided product_id is found. Returns a JSON response with status code 500
+                      and an "error" key if an internal server error occurs.
+    """
     try:
-        return JSONResponse(
-            status_code=200, content={"success": "Product successfully updated"}
+        response: ProductOut = product_controller.update_product_by_id(
+            product_id=product_id, data=product
         )
+
+        return JSONResponse(status_code=200, content={"success": response})
+
+    except ProductException as e:
+        return JSONResponse(status_code=404, content={"error": str(e.message)})
     except Exception as e:
         return JSONResponse(
             status_code=500, content={f"Internal Server Error \n Message: {str(e)}"}

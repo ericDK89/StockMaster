@@ -58,7 +58,7 @@ class ProductRepository:
         Returns:
             Product | None: Return Product or None if product not exist
         """
-        return self.__db.query(Product).filter_by(id=product_id).first()
+        return self.__db.query(Product).filter(Product.id == 1).first()
 
     def update_product_by_id(self, product_id: int, data: ProductCreate):
         """Method to update product by id
@@ -72,10 +72,8 @@ class ProductRepository:
             ProductOut: If product exist return ProductOut
         """
 
-        # write a doc string for this method
-
         product: ProductOut | None = (
-            self.__db.query(Product).filter_by(id == product_id).first()
+            self.__db.query(Product).filter(Product.id == product_id).first()
         )
 
         if product:
