@@ -77,9 +77,7 @@ class ProductRepository:
         )
 
         if product:
-            for key, value in data.model_dump(
-                exclude="stock_quantity", exclude_unset=True
-            ).items():
+            for key, value in data.model_dump(exclude_unset=True).items():
                 setattr(product, key, value)
             self.__db.commit()
             self.__db.refresh(product)

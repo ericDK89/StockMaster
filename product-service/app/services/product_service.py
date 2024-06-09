@@ -1,10 +1,11 @@
 """File to handle all product-service Services"""
 
-from typing import List
+from typing import List, Dict
 from utils.products_to_json import products_to_json, product_to_json
 from schemas.product_schema import ProductCreate, ProductOut, ProductUpdate
 from repositories.product_repository import ProductRepository
 from models.product import Product
+from messaging import send_message_to_queue
 
 
 class ProductService:
@@ -34,7 +35,10 @@ class ProductService:
         product_instance = Product(**product.model_dump())
         created_product: Product = self.__product_repository.create(product_instance)
 
-        return created_product
+        if created_product:
+            message: Dict = {"product_id": created_product.id}
+            send_message_to_queue(message=message)
+            return created_product
 
     def get_products(self):
         """Method to return all products from db
@@ -89,15 +93,11 @@ class ProductService:
         if not self.get_product_by_id(product_id=product_id):
             return None
 
-        print("da", data)
         product: ProductOut | None = self.__product_repository.update_product_by_id(
             product_id=product_id, data=data
         )
-        print("pro", product)
 
         validate_product: ProductOut = ProductOut.model_validate(product)
-
-        print("va", validate_product)
 
         return product_to_json(product=validate_product)
 

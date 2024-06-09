@@ -25,12 +25,34 @@ services:
       - POSTGRES_DB=inventory_management_db
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
+      - RABBITMQ_HOST=rabbitmq
     networks:
       - app-network
     depends_on:
       - db
+      - rabbitmq
     ports:
       - "8001:8001"
+
+  stock-service:
+    build:
+      context: ./stock-service
+    volumes:
+      - ./stock-service/app:/app
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=inventory_management_db
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - RABBITMQ_HOST=rabbitmq
+    networks:
+      - app-network
+    depends_on:
+      - db
+      - rabbitmq
+    ports:
+      - "8002:8002"
 
   gateway-service:
     build:
@@ -41,8 +63,19 @@ services:
       - app-network
     depends_on:
       - product-service
+      - stock-service
     ports:
       - "8000:8000"
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
 
 networks:
   app-network:

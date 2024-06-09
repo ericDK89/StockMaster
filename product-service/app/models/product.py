@@ -15,4 +15,3 @@ class Product(Base):
     name = Column(String, index=True, nullable=False)
     description = Column(String, nullable=False)
     price = Column(Float, nullable=False)
-    stock = relationship("Stock", back_populates="product", uselist=False)

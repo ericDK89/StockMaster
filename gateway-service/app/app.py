@@ -12,7 +12,9 @@ async def proxy(request: Request, service_url: str) -> JSONResponse:
                 method=request.method,
                 url=f"{service_url}{request.url.path}",
                 json=(
-                    await request.json() if request.method in ["POST", "PUT"] else None
+                    await request.json()
+                    if request.method in ["POST", "PUT", "PATCH"]
+                    else None
                 ),
             )
 
@@ -21,8 +23,20 @@ async def proxy(request: Request, service_url: str) -> JSONResponse:
             )
 
         except httpx.HTTPStatusError as exc_info:
+            print(f"error: {exc_info.response.text}")
             raise HTTPException(
                 status_code=exc_info.response.status_code, detail=exc_info.response.text
+            )
+        # except httpx.RequestError as exc_info:
+        #     print(f"error while requesting url: {exc_info.request.url}")
+        #     print(f"error message: {exc_info}")
+        #     raise HTTPException(
+        #         status_code=500, detail="Internal server error while proxyng"
+        #     )
+        except Exception as e:
+            print(f"error: {str(e)}")
+            raise HTTPException(
+                status_code=500, detail="Unexpected internal server error"
             )
 
 
@@ -37,3 +51,9 @@ async def proxy_products(request: Request) -> JSONResponse:
 @app.delete("/product/{product_id}")
 async def proxy_product(request: Request) -> JSONResponse:
     return await proxy(request=request, service_url="http://product-service:8001")
+
+
+@app.get("/stock/{product_id}")
+@app.put("/stock/{stock_id}")
+async def proxy_stock(request: Request) -> JSONResponse:
+    return await proxy(request=request, service_url="http://stock-service:8002")
