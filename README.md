@@ -1,7 +1,7 @@
 # StockMaster
 
 ## Descrição
-Este projeto é um sistema de gestão de estoque que permite a administração de produtos, controle de estoque e geração de relatórios. Ele é construído utilizando uma arquitetura de microserviços com Python e FastAPI.
+Este projeto é um sistema de gestão de estoque que permite a administração de produtos e controle de estoque. Ele é construído utilizando uma arquitetura de microserviços com Python e FastAPI.
 
 ## Estrutura do Projeto
 O projeto está dividido em quatro microserviços principais:
@@ -76,19 +76,12 @@ Cada serviço possui sua própria configuração, modelo de dados e rotas.
 - **GET** /stock/{product_id}
     - Consultar o estoque de um produto específico pelo ID.
 
-### Report Service
-- **POST** /reports/sales
-    - Gerar um relatório de vendas.
-
-- **POST** /reports/inventory
-    - Gerar um relatório de estoque.
-
 ---
 
 # StockMaster
 
 ## Description
-This project is an inventory management system that allows for the administration of products, stock control, and report generation. It is built using a microservices architecture with Python and FastAPI.
+This project is an inventory management system that allows for the administration of products and stock control. It is built using a microservices architecture with Python and FastAPI.
 
 ## Project Structure
 The project is divided into three main microservices:
@@ -160,10 +153,3 @@ Each service has its own configuration, data model, and routes.
 
 - **GET** /stock/{product_id}
     - Retrieve the stock of a specific product by ID.
-
-### Report Service
-- **POST** /reports/sales
-    - Generate a sales report.
-
-- **POST** /reports/inventory
-    - Generate an inventory report.
