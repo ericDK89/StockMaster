@@ -9,7 +9,6 @@ O projeto está dividido em quatro microserviços principais:
 - **gateway-service**: Centraliza as requisições dos serviços em uma única porta.
 - **product-service:** Gerencia os produtos no estoque.
 - **stock-service:** Controla a quantidade de produtos em estoque.
-- **report-service:** Gera relatórios sobre o estoque.
 
 Cada serviço possui sua própria configuração, modelo de dados e rotas.
 
@@ -86,9 +85,9 @@ This project is an inventory management system that allows for the administratio
 ## Project Structure
 The project is divided into three main microservices:
 
+- **gateway-service**: Centralizes service requests on a single port.
 - **product-service**: Manages the products in the inventory.
 - **stock-service:**: Controls the quantity of products in stock.
-- **report-service:**: Generates reports on the inventory.
 
 Each service has its own configuration, data model, and routes.
 
