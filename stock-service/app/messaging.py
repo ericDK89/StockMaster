@@ -1,10 +1,12 @@
-import pika
+"""File to create messaging for stock, to handle RABBITMQ"""
+
 import json
 import os
 import time
+import pika
 from db.database import SessionLocal
 from repositories.stock_repository import StockRepository
-from schemes.stock_schema import StockCreate
+from schemes.stock_schema import StockCreate, Stock
 
 RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "localhost")
 connection = None
@@ -13,6 +15,14 @@ consuming = True
 
 
 def create_connection():
+    """
+    This function creates a connection to the RabbitMQ server.
+
+    Returns:
+    pika.BlockingConnection: The connection to the RabbitMQ server.
+
+    If the connection fails, it will keep trying every 5 seconds until a connection is established.
+    """
     global connection
     while True:
         try:
@@ -25,21 +35,64 @@ def create_connection():
             time.sleep(5)
 
 
-def callback(ch, method, properties, body):
+def callback(ch, method, _, body):
+    """
+    This function is the callback that is called when a message is consumed from the RabbitMQ queue.
+
+    Parameters:
+    ch (pika.Channel): The channel from which the message was consumed.
+    method (pika.spec.Basic.Deliver): The method frame.
+    properties (pika.spec.BasicProperties): The properties.
+    body (bytes): The body of the message.
+
+    The function processes the message and acknowledges it.
+    """
     message = json.loads(body)
-    create_stock_record(message["product_id"])
+    action = message.get("action")
+
+    if action == "delete":
+        delete_stock(message["product_id"])
+    else:
+        create_stock_record(message["product_id"])
+
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def create_stock_record(product_id):
-    db = SessionLocal()
-    stock_repository = StockRepository(db)
-    stock_data = StockCreate(product_id=product_id)
-    stock_repository.create(stock_data)
-    db.close()
+def delete_stock(product_id: int) -> None:
+    """
+    This function deletes a stock record.
+
+    Parameters:
+    product_id (int): The ID of the product for which to delete the stock record.
+    """
+    with SessionLocal() as db:
+        stock_repository = StockRepository(db)
+        stock: Stock | None = stock_repository.get_stock_by_product_id(
+            product_id=product_id
+        )
+        if stock:
+            stock_repository.delete(stock=stock)
+
+
+def create_stock_record(product_id) -> None:
+    """
+    This function creates a new stock record.
+
+    Parameters:
+    product_id (int): The ID of the product for which to create the stock record.
+    """
+    with SessionLocal() as db:
+        stock_repository = StockRepository(db)
+        stock_data = StockCreate(product_id=product_id)
+        stock_repository.create(stock_data)
 
 
 def start_consuming():
+    """
+    This function starts consuming messages from the RabbitMQ queue.
+
+    It creates a connection and a channel, declares the queue, sets the QoS, and starts consuming messages.
+    """
     global channel
     connection = create_connection()
     channel = connection.channel()
@@ -54,6 +107,9 @@ def start_consuming():
 
 
 def stop_consuming():
+    """
+    This function stops consuming messages and closes the connection to the RabbitMQ server.
+    """
     global consuming
     consuming = False
     if connection and connection.is_open:

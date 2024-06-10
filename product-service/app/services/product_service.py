@@ -40,6 +40,8 @@ class ProductService:
             send_message_to_queue(message=message)
             return created_product
 
+        return None
+
     def get_products(self):
         """Method to return all products from db
 
@@ -114,4 +116,11 @@ class ProductService:
         Returns:
             The result of the deletion operation from the ProductRepository.
         """
-        return self.__product_repository.delete_product_by_id(product_id=product_id)
+        response = self.__product_repository.delete_product_by_id(product_id=product_id)
+
+        if not response:
+            return None
+
+        message = {"product_id": product_id, "action": "delete"}
+        send_message_to_queue(message=message)
+        return response

@@ -1,3 +1,5 @@
+"""Filte to create routes for stock"""
+
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from dependencies.stock_dependencies import get_stock_controller
@@ -14,6 +16,16 @@ def get_stock_by_product_id(
     product_id: int,
     stock_controller: StockController = Depends(get_stock_controller),
 ) -> JSONResponse:
+    """
+    This function retrieves the stock information for a specific product.
+
+    Parameters:
+    product_id (int): The ID of the product for which to retrieve stock information.
+    stock_controller (StockController): The controller that handles the business logic.
+
+    Returns:
+    JSONResponse: The response from the server, which includes the stock information or an error message.
+    """
     try:
         response: Stock = stock_controller.get_stock_by_product_id(
             product_id=product_id
@@ -36,6 +48,17 @@ def update(
     data: StockUpdate,
     stock_controller: StockController = Depends(get_stock_controller),
 ) -> JSONResponse:
+    """
+    This function updates the stock information for a specific product.
+
+    Parameters:
+    stock_id (int): The ID of the stock to update.
+    data (StockUpdate): The new stock information.
+    stock_controller (StockController): The controller that handles the business logic.
+
+    Returns:
+    JSONResponse: The response from the server, which includes the updated stock information or an error message.
+    """
     try:
         response: StockOut = stock_controller.update(stock_id=stock_id, data=data)
 

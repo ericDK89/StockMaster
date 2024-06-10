@@ -1,7 +1,7 @@
 """Models for product-service"""
 
 from sqlalchemy import Column, Integer, String, Float
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 

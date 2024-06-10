@@ -1,3 +1,5 @@
+"""File to create app and start FastAPI on stock service"""
+
 import threading
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
@@ -18,6 +20,18 @@ consumer_thread = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
+    This function is an asynchronous context manager that manages the lifespan of the application.
+    It starts a new thread for consuming messages when the application starts and stops consuming messages when the application stops.
+
+    Parameters:
+    app (FastAPI): The FastAPI application.
+
+    Yields:
+    None
+
+    The function starts a new thread for consuming messages when entering the context and stops consuming messages and joins the thread when exiting the context.
+    """
     global consumer_thread
     consumer_thread = threading.Thread(target=messaging.start_consuming)
     consumer_thread.start()

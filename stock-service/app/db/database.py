@@ -1,3 +1,5 @@
+"""File to start database"""
+
 import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, Engine
@@ -16,6 +18,14 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def get_db():
+    """
+    This function creates a new SQLAlchemy session and yields it for use.
+
+    After the session is used, it is closed.
+
+    Yields:
+    Session: The SQLAlchemy session.
+    """
     db: Session = SessionLocal()
     try:
         yield db
