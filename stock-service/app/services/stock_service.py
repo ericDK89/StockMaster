@@ -1,7 +1,6 @@
 from repositories.stock_repository import StockRepository
-from schemes.stock_schema import Stock
+from schemes.stock_schema import Stock, StockUpdate, StockOut
 from utils.stock_to_json import stock_to_json
-from datetime import datetime
 
 
 class StockService:
@@ -20,5 +19,14 @@ class StockService:
 
         return stock_to_json(validate_stock)
 
-    def update(self, stock_id: int, quantity: int):
-        return self.__stock_repository.update(stock_id=stock_id, quantity=quantity)
+    def update(self, stock_id: int, data: StockUpdate):
+        stock: StockOut | None = self.__stock_repository.update(
+            stock_id=stock_id, data=data
+        )
+
+        if not stock:
+            return None
+
+        validate_stock: Stock = Stock.model_validate(stock)
+
+        return stock_to_json(validate_stock)

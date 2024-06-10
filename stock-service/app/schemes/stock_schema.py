@@ -12,7 +12,13 @@ class StockCreate(StockBase):
 
 
 class StockUpdate(StockBase):
+    pass
+
+
+class StockOut(StockBase):
+    id: int
     product_id: int
+    last_updated: datetime
 
 
 class Stock(StockBase):

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models.stock import Stock
-from schemes.stock_schema import StockCreate
+from schemes.stock_schema import StockCreate, StockOut
 
 
 class StockRepository:
@@ -16,16 +16,18 @@ class StockRepository:
     def get_stock_by_product_id(self, product_id: int):
         return self.__db.query(Stock).filter(Stock.product_id == product_id).first()
 
-    def update(self, stock_id: int, quantity: int):
-        db_stock: Stock | None = (
-            self.__db.query(Stock).filter(Stock.stock_id == stock_id).first()
+    def update(self, stock_id: int, data: StockOut):
+        stock: StockOut | None = (
+            self.__db.query(Stock).filter(Stock.id == stock_id).first()
         )
 
-        if not db_stock:
+        if not stock:
             return None
 
-        db_stock.quantity = quantity
-        self.__db.commit()
-        self.__db.refresh(db_stock)
+        for key, value in data.model_dump(exclude_unset=True).items():
+            setattr(stock, key, value)
 
-        return db_stock
+        self.__db.commit()
+        self.__db.refresh(stock)
+
+        return stock

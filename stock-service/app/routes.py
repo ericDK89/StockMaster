@@ -4,6 +4,7 @@ from dependencies.stock_dependencies import get_stock_controller
 from controllers.stock_controller import StockController
 from models.stock import Stock
 from exceptions.stock_exceptions import StockException
+from schemes.stock_schema import StockUpdate, StockOut
 
 router = APIRouter()
 
@@ -32,14 +33,13 @@ def get_stock_by_product_id(
 @router.put("/stock/{stock_id}")
 def update(
     stock_id: int,
-    quantity: int,
+    data: StockUpdate,
     stock_controller: StockController = Depends(get_stock_controller),
 ) -> JSONResponse:
     try:
-        response: Stock = stock_controller.update(stock_id=stock_id, quantity=quantity)
+        response: StockOut = stock_controller.update(stock_id=stock_id, data=data)
 
-        print(response)
-        return JSONResponse(status_code=200, content={"success": "oi"})
+        return JSONResponse(status_code=200, content={"success": response})
 
     except StockException as e:
         return JSONResponse(status_code=404, content={"error": str(e.message)})

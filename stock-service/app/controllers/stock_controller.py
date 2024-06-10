@@ -1,8 +1,7 @@
 from services.stock_service import StockService
 from models.stock import Stock
 from exceptions.stock_exceptions import StockException
-from schemes.stock_schema import StockCreate
-from utils.stock_to_json import stock_to_json
+from schemes.stock_schema import StockUpdate, StockOut
 
 
 class StockController:
@@ -19,9 +18,9 @@ class StockController:
 
         return stock
 
-    def update(self, stock_id: int, quantity: int) -> Stock:
-        stock: Stock | None = self.__stock_service.update(
-            stock_id=stock_id, quantity=quantity
+    def update(self, stock_id: int, data: StockUpdate) -> StockOut:
+        stock: StockOut | None = self.__stock_service.update(
+            stock_id=stock_id, data=data
         )
 
         if not stock:
