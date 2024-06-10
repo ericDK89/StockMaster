@@ -37,7 +37,9 @@ def update(
 ) -> JSONResponse:
     try:
         response: Stock = stock_controller.update(stock_id=stock_id, quantity=quantity)
-        return JSONResponse(status_code=200, content={"success": response})
+
+        print(response)
+        return JSONResponse(status_code=200, content={"success": "oi"})
 
     except StockException as e:
         return JSONResponse(status_code=404, content={"error": str(e.message)})

@@ -27,17 +27,15 @@ async def proxy(request: Request, service_url: str) -> JSONResponse:
             raise HTTPException(
                 status_code=exc_info.response.status_code, detail=exc_info.response.text
             )
-        # except httpx.RequestError as exc_info:
-        #     print(f"error while requesting url: {exc_info.request.url}")
-        #     print(f"error message: {exc_info}")
-        #     raise HTTPException(
-        #         status_code=500, detail="Internal server error while proxyng"
-        #     )
+        except httpx.RequestError as exc_info:
+            print(f"error while requesting url: {exc_info.request.url}")
+            print(f"error message: {exc_info}")
+            raise HTTPException(
+                status_code=500, detail="Internal server error while proxyng"
+            )
         except Exception as e:
             print(f"error: {str(e)}")
-            raise HTTPException(
-                status_code=500, detail="Unexpected internal server error"
-            )
+            raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/products")

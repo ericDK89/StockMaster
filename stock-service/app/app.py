@@ -13,13 +13,17 @@ app = FastAPI(title=config.PROJECT_NAME, version=config.PROJECT_VERSION)
 
 Base.metadata.create_all(bind=engine)
 
+consumer_thread = None
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    thread = threading.Thread(target=messaging.start_consuming)
-    thread.start()
+    global consumer_thread
+    consumer_thread = threading.Thread(target=messaging.start_consuming)
+    consumer_thread.start()
     yield
-    thread.join()
+    messaging.stop_consuming()
+    consumer_thread.join()
 
 
 app.router.lifespan_context = lifespan

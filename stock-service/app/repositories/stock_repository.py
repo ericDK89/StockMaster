@@ -1,13 +1,14 @@
 from sqlalchemy.orm import Session
 from models.stock import Stock
+from schemes.stock_schema import StockCreate
 
 
 class StockRepository:
     def __init__(self, db: Session) -> None:
         self.__db: Session = db
 
-    def create(self, product_id: int) -> None:
-        stock = Stock(product_id=product_id)
+    def create(self, data: StockCreate) -> None:
+        stock = Stock(product_id=data.product_id)
         self.__db.add(stock)
         self.__db.commit()
         self.__db.refresh(stock)
